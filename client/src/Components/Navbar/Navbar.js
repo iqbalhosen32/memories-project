@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { AppBar, Avatar, Button, Toolbar, Typography } from '@material-ui/core';
 import useStyles from './Styles';
-import memories from "../../Images/memories.png";
+import memoriesText from "../../Images/memoriesText.png";
+import memoriesLogo from "../../Images/memoriesLogo.png";
 import { useDispatch } from "react-redux";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import decode from 'jwt-decode';
@@ -26,6 +27,8 @@ const Navbar = () => {
         setUser(JSON.parse(localStorage.getItem('profile')));
     }, [location]);
 
+    // console.log(user?.result.imageUrl)
+
     const logout = () => {
         dispatch({ type: actionType.LOGOUT })
         navigation('/auth')
@@ -34,10 +37,10 @@ const Navbar = () => {
     }
     return (
         <AppBar className={classes.appBar} position="static" color="inherit">
-            <div className={classes.brandContainer}>
-                <Typography component={Link} to="/" className={classes.heading} variant="h2" aline="center">Memories</Typography>
-                <img className={classes.image} src={memories} alt="memories" height="60" />
-            </div>
+            <Link to="/" className={classes.brandContainer}>
+                <img src={memoriesText} alt='icon' height="45px" />
+                <img className={classes.image} src={memoriesLogo} alt="icon" height="40px" />
+            </Link>
             <Toolbar className={classes.toolbar}>
                 {user?.result ? (
                     <div className={classes.profile}>

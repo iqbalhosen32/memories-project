@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import { signup, signin } from '../../Actions/Auth';
 import { AUTH } from '../../Constants/actionTypes.js';
 
+
 const initialState = { firstName: '', lastName: '', email: '', password: '', confirmPassword: '' }
 
 const SignUp = () => {
@@ -22,6 +23,12 @@ const SignUp = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const switchMode = () => {
+    setForm(initialState);
+    setIsSignUp((prevIsSignup) => !prevIsSignup);
+    setShowPassword(false);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -31,28 +38,23 @@ const SignUp = () => {
       dispatch(signin(form, navigate));
     }
   };
-  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
-
-  const switchMode = () => {
-    setForm(initialState);
-    setIsSignUp((prevIsSignup) => !prevIsSignup);
-    setShowPassword(false);
-  };
 
   const googleSuccess = async (res) => {
     const result = res?.profileObj;
     const token = res?.tokenId;
 
-
     try {
-      dispatch({ type: AUTH, data: { result, token } })
-      navigate('/')
-    } catch (error) {
-      console.log(error)
-    }
-  }
+      dispatch({ type: AUTH, data: { result, token } });
 
-  const googleFailure = () => alert('Google Sign In was unsuccessful. Try again later');
+      navigate('/');
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const googleError = () => alert('Google Sign In was unsuccessful. Try again later');
+
+  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
   return (
     <Container component="main" maxWidth="xs">
@@ -62,7 +64,7 @@ const SignUp = () => {
         </Avatar>
         <Typography component="h1" varient="h5" >{isSignUp ? 'Sign Up' : 'Sign In'}</Typography>
         <form className={classes.form} onSubmit={handleSubmit}>
-          {/* <Grid container spacing={2}>
+          <Grid container spacing={2}>
             {
               isSignUp && (
                 <>
@@ -81,12 +83,12 @@ const SignUp = () => {
             {
               isSignUp ? 'Sign Up' : 'Sign In'
             }
-          </Button> */}
+          </Button>
 
-          <GoogleLogin
-            clientId="Google ID" // Google ID Will be here
+          {/* <GoogleLogin
+            clientId="1020677368518-h5ajkcblirmft9930emp3qgbb82e3pb1.apps.googleusercontent.com" // Google ID Will be here
             onSuccess={googleSuccess}
-            onFailure={googleFailure}
+            onFailure={googleError}
             cookiePolicy={'single_host_origin'}
             render={(renderProps) => (
               <Button className={classes.googleButton} color="primary" fullWidth onClick={renderProps.onClick} disabled={renderProps.disabled} startIcon={<Icon />} variant="contained">
@@ -94,9 +96,11 @@ const SignUp = () => {
               </Button>
 
             )}
-          />
+          /> */}
 
-          {/* <Grid container justifyContent='flex-end'>
+         
+
+          <Grid container justifyContent='flex-end'>
             <Grid item>
               <Button onClick={switchMode}>
                 {
@@ -104,7 +108,7 @@ const SignUp = () => {
                 }
               </Button>
             </Grid>
-          </Grid> */}
+          </Grid>
         </form>
       </Paper>
     </Container>
